@@ -3,8 +3,7 @@
 # dependencies
 /.pnp
 .pnp.js
-src/components
-
+components/
 # testing
 /coverage
 
