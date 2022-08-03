@@ -13,12 +13,12 @@ app.use(cookieParser());
   
 app.get("/", function (req, res) {
     log(chalk.blue.bgRed.bold("Hello world!"));
-    res.status(200);
+    res.json('hello');
   });
 
-app.post("/post", (req, res) => {
+app.post("/", (req, res) => {
     console.log("Connected to React");
-    res.redirect("/");
+    res.redirect("/connexion");
   });
   
 app.listen(port, console.log(`Server started on port ${port}`));

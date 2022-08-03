@@ -12,7 +12,7 @@ function App() {
         <Header />
         <RecipeCard />
       </Section>
-      <form action="../../post" method="post" className="form">
+      <form action="/" method="post" className="form">
         <button type="submit">Connected?</button>
       </form>
     </Main>
