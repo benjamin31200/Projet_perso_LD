@@ -12,9 +12,6 @@ function App() {
         <Header />
         <RecipeCard />
       </Section>
-      <form action="/" method="post" className="form">
-        <button type="submit">Connected?</button>
-      </form>
     </Main>
   );
 }
