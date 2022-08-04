@@ -4,28 +4,25 @@ import "dotenv/config";
 dotenv.config();
 import express from "express";
 import cookieParser from "cookie-parser";
-// import { setupRoutes } from "./routes/index.js";
-import redis from "redis";
+import { setupRoutes } from "./routes/index.js";
 
-const client = redis.createClient(process.env.DB_PORT, process.env.DB_HOST);
-
-
-
-const app = express();
 const log = console.log;
 const error = chalk.bold.red;
 const success = chalk.bold.underline.green;
-const port = process.env.EXPRESS_PORT;
-app.use(express.json());
-app.use(cookieParser());
+
+const app = express();
+app.use(express.json(), cookieParser());
+
 
 app.get("/", function (req, res) {
   log(success("Hello world!"));
   res.json("hello");
-  client.on("connect", function () {
-    console.log("Connected!");
-  });
 });
-// setupRoutes(app);
+app.post("/post", function (req, res) {
+  log(success("Hello world!"));
+  res.end();
+});
+setupRoutes(app);
 
+const port = process.env.EXPRESS_PORT;
 app.listen(port, console.log(`Server started on port ${port}`));
