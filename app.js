@@ -1,7 +1,10 @@
 import chalk from "chalk";
+import dotenv from "dotenv";
+import "dotenv/config";
+dotenv.config();
 import express from "express";
 import cookieParser from "cookie-parser";
-import { setupRoutes } from "./routes/index.js";
+// import { setupRoutes } from "./routes/index.js";
 import redis from "redis";
 
 const client = redis.createClient(process.env.DB_PORT, process.env.DB_HOST);
@@ -23,6 +26,6 @@ app.get("/", function (req, res) {
     console.log("Connected!");
   });
 });
-setupRoutes(app);
+// setupRoutes(app);
 
 app.listen(port, console.log(`Server started on port ${port}`));
