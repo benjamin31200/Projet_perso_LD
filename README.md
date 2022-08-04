@@ -25,6 +25,7 @@ L'objectif est de constituer un sit web pouvant proposer de parcourir une API cr
 - [Joi](https://www.npmjs.com/package/joi)
 - [@sideway/address](https://joi.dev/module/address/api/?v=5.0.0)
 - [Argon2](https://www.npmjs.com/package//argon2)
+- [cors](https://www.npmjs.com/package/cors)
 - [Json-webtoken](https://www.npmjs.com/package/jsonwebtoken)
 - [Jwt-decode](https://www.npmjs.com/package/jwt-decode)
 - [Express-session](https://www.npmjs.com/package/express-session)
