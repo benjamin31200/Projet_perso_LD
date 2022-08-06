@@ -1,16 +1,16 @@
 import Router from "express-promise-router";
-export const connexionRouter = Router();
+export const inscriptionRouter = Router();
 import {
   create,
   findByEmail,
   findMany,
   validate,
   hashPassword,
-} from "../models/connexion.js";
+} from "../models/inscription.js";
 import { chalkFunc } from "../app.js";
 import { calculateToken } from "../helpers/users.js";
 
-connexionRouter.get("/", (req, res) => {
+inscriptionRouter.get("/", (req, res) => {
   findMany()
     .then((results) => {
       chalkFunc.log(chalkFunc.success("requête réussie"));
@@ -22,7 +22,7 @@ connexionRouter.get("/", (req, res) => {
     });
 });
 
-connexionRouter.post("/", (req, res) => {
+inscriptionRouter.post("/", (req, res) => {
   let { password, email, repeat_password, ...data } = req.body;
   console.log(repeat_password);
   let validationErrors = null;

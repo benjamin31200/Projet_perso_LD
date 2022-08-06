@@ -35,7 +35,7 @@ export const validate = (data) => {
   for (const key in data) {
     const element = data[key];
     if (regex.exec(element.toLowerCase()) !== null) {
-       throw new Error(`L'un des champs comporte une donnée refusée: ${element}`)
+       throw new Error(`L'un des champs comporte une donnée interdite: ${element}`)
     }
     console.log(element);
   }

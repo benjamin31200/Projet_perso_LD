@@ -1,5 +1,5 @@
-import { connexionRouter } from "./connexionRouter.js";
+import { inscriptionRouter } from "./inscriptionRouter.js";
 
 export const setupRoutes = (app) => {
-  app.use('/connexion', connexionRouter);
+  app.use('/inscription', inscriptionRouter);
 };
