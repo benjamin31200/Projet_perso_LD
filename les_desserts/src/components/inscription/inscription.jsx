@@ -1,23 +1,55 @@
-import React from "react";
+import { useState } from "react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { BrowserRouter } from "react-router-dom";
-import { Link } from "react-router-dom";
+// import { BrowserRouter } from "react-router-dom";
+// import { Link } from "react-router-dom";
+import {
+  InputName,
+  InputLastname,
+  InputPseudonyme,
+  InputEmail,
+  InputPassword,
+  InputRepeatPassword,
+  InputSubmit,
+  Form,
+} from "./styleComponentInscription.jsx";
 
 const MySwal = withReactContent(Swal);
 
 const Inscription = () => {
+
+  const [inscription, setInscription] = useState({
+    name: "",
+    lastname: "",
+    pseudonyme: "",
+    email: "",
+    password: "",
+    repeat_password: "",
+  });
+
+  const handleChange = (event) => {
+    setInscription({ ...inscription,   [event.target.name]:event.target.value });
+    };
+
+    const handleSubmit = (event) => {
+      event.preventDefault();
+      console.log(inscription);
+      };
+
   MySwal.fire({
     title: "Inscription",
-    html: `<form action="/inscription" method="post">
-    <input type="text" id="name" class="swal2-input" placeholder="Prénom">
-    <input type="text" id="lastname" class="swal2-input" placeholder="Nom">
-    <input type="text" id="pseudonyme" class="swal2-input" placeholder="Pseudonyme">
-    <input type="email" id="email" class="swal2-input" placeholder="Email">
-    <input type="password" id="password" class="swal2-input" placeholder="mot de passe">
-    <input type="password" id="repeat_password" class="swal2-input" placeholder="répéter le mot de passe">
-    <input type="submit" id="submit" class="swal2-input" placeholder="envoyer">
-    </form>`,
+    html: (
+      <Form method="post"
+      action="/inscription" onSubmit={handleSubmit}>
+        <InputName nameValue={inscription.name} onChange={handleChange}/>
+        <InputLastname lastnameValue={inscription.lastname} onChange={handleChange}/>
+        <InputPseudonyme pseudonymeValue={inscription.pseudonyme} onChange={handleChange}/>
+        <InputEmail emailValue={inscription.email} onChange={handleChange}/>
+        <InputPassword passwordValue={inscription.password} onChange={handleChange}/>
+        <InputRepeatPassword repeatPasswordValue={inscription.repeat_password} onChange={handleChange}/>
+        <InputSubmit type="submit"/>
+      </Form>
+    ),
     focusConfirm: false,
     showCloseButton: true,
     preConfirm: () => {
@@ -48,7 +80,7 @@ const Inscription = () => {
       };
     },
   }).then((result) => {
-      return JSON.parse(result);
+    return JSON.parse(result);
   });
 };
 

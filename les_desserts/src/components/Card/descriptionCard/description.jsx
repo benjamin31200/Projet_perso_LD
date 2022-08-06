@@ -9,7 +9,7 @@ import {
   Logo,
   Title,
   Text,
-} from "./StyledComponents.jsx";
+} from "./StyledComponentsDescription.jsx";
 import { baseText } from "../../../Function.js";
 
 const DescriptionCard = (props) => {
