@@ -1,6 +1,5 @@
 import { connection } from "../db-config.js";
-import pkgJoi from "joi";
-const { object, string } = pkgJoi;
+import Joi from "joi";
 import pkgArgon from "argon2";
 const { argon2id, hash, verify } = pkgArgon;
 
@@ -20,47 +19,53 @@ export const verifyPassword = (plainPassword, hashedPassword) => {
 };
 
 const invalidData = [
-  "SELECT",
-  "DELETE",
-  "CREATE",
-  "UPDATE",
-  "WHERE",
-  "SET",
-  "INSERT",
-  "INTO",
+  "select",
+  "delete",
+  "create",
+  "update",
+  "where",
+  "set",
+  "insert",
+  "into",
 ];
 
 export const validate = (data) => {
-  return object({
-    email: Joi.string
-      .email()
-      .max(255)
-      .required()
-      .invalid(...invalidData)
-      .Joi.isEmailValid(email),
-    firstname: Joi.string()
-      .max(100)
-      .required()
-      .invalid(...invalidData),
-    lastname: Joi.string()
-      .max(100)
-      .required()
-      .invalid(...invalidData),
-    pseudonyme: Joi.string()
-      .min(3)
-      .max(100)
-      .required()
-      .invalid(...invalidData),
-    password: Joi.string()
-      .max(255)
-      .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
-      .invalid(...invalidData),
-    repeat_password: Joi.ref("password").invalid(...invalidData),
+  const regex =
+    /\bselect\b|\bfrom\b|\bdelete\b|\bcreate\b|\bupdate\b|\bwhere\b|\bset\b|\binsert\b|\binto\b/;
+  for (const key in data) {
+    const element = data[key];
+    if (regex.exec(element.toLowerCase()) !== null) {
+       throw new Error(`L'un des champs comporte une donnée refusée: ${element}`)
+    }
+    console.log(element);
+  }
+  return Joi.object({
+    email: Joi.string().email().lowercase().max(255).required(),
+    name: Joi.string().max(100).lowercase().required(),
+    lastname: Joi.string().max(100).lowercase().required(),
+    pseudonyme: Joi.string().min(3).lowercase().max(100).required(),
+    password: Joi.string().max(255).required(),
+    repeat_password: Joi.ref("password"),
   }).validate(data, { abortEarly: false }).error;
 };
 
 export const findMany = async () => {
   return connection
     .promise()
-    .query("SELECT * from users").then(([...result]) => result[0]);
+    .query("SELECT * from users")
+    .then(([...result]) => result[0]);
+};
+
+export const findByEmail = async (email) => {
+  return connection
+    .promise()
+    .query("SELECT * FROM users WHERE email = ?", [email])
+    .then(([...result]) => result[0]);
+};
+
+export const create = async (data) => {
+  return connection
+    .promise()
+    .query("INSERT INTO users SET ?", data)
+    .then(([...result]) => result[0]);
 };
