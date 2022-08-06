@@ -1,28 +1,20 @@
-import chalk from "chalk";
-import dotenv from "dotenv";
-import "dotenv/config";
-dotenv.config();
-import express from "express";
+import { setupRoutes } from "./routes/index.js"
+import { connection } from "./db-config.js";
+import express, { json } from "express";
 import cookieParser from "cookie-parser";
-import { setupRoutes } from "./routes/index.js";
-
-const log = console.log;
-const error = chalk.bold.red;
-const success = chalk.bold.underline.green;
-
 const app = express();
-app.use(express.json(), cookieParser());
+app.use(json(), cookieParser());
 
+const port = process.env.PORT;
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
 
-app.get("/", function (req, res) {
-  log(success("Hello world!"));
-  res.json("hello");
-});
-app.post("/post", function (req, res) {
-  log(success("Hello world!"));
-  res.end();
-});
 setupRoutes(app);
+app.get("/", function (req, res) {
+});
 
-const port = process.env.EXPRESS_PORT;
-app.listen(port, console.log(`Server started on port ${port}`));
+connection.connect(function (err) {
+  if (err) throw err;
+  console.log("Connecté à la base de données MySQL!");
+});
