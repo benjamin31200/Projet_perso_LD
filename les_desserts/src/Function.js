@@ -16,3 +16,7 @@ export const chalkFunc = {
   bad: chalk.bold.underline.red,
   success: chalk.bold.underline.green,
 };
+
+export const deleteBlank = (data) => {
+return data.split(" ").join("");
+}

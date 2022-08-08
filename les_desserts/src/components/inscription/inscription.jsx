@@ -1,22 +1,22 @@
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
-import { chalkFunc } from "../../Function.js";
-
+import { chalkFunc, deleteBlank } from "../../Function.js";
 const MySwal = withReactContent(Swal);
 
 const Inscription = () => {
- 
-  MySwal.fire({
-    title: "Inscription",
-    html: `<form action="/inscription" method="post">
-    <input type="text" id="name" class="swal2-input" placeholder="Prénom">
-    <input type="text" id="lastname" class="swal2-input" placeholder="Nom">
-    <input type="text" id="pseudonyme" class="swal2-input" placeholder="Pseudonyme">
-    <input type="email" id="email" class="swal2-input" placeholder="Email">
-    <input type="password" id="password" class="swal2-input" placeholder="mot de passe">
-    <input type="password" id="repeat_password" class="swal2-input" placeholder="répéter le mot de passe">
-    </form>`,
+MySwal.fire({
+  title: 'Inscription',
+    html: `
+    <form action="/inscription" method="post">
+    <input type="text" id="name" class="swal2-input" placeholder="Prénom"/>
+    <input type="text" id="lastname" class="swal2-input" placeholder="Nom"/>
+    <input type="text" id="pseudonyme" class="swal2-input" placeholder="Pseudonyme"/>
+    <input type="email" pattern=".+@globex.com" size="30" required id="email" class="swal2-input" placeholder="Email"/>
+    <input type="password" inputmode="numeric" id="password" class="swal2-input" placeholder="mot de passe"/>
+    <input type="password" inputmode="numeric" id="repeat_password" class="swal2-input" placeholder="répéter le mot de passe"/>
+    </form>
+    `,
     focusConfirm: false,
     confirmButtonText: "S'inscrire",
     showCloseButton: true,
@@ -38,44 +38,51 @@ const Inscription = () => {
       ) {
         Swal.showValidationMessage("L'un des champs d'enregistrement est vide");
       }
-      return {
-        name: formName,
-        lastname: formLastname,
-        pseudonyme: formPseudonyme,
-        email: formEmail,
-        password: formPassword,
-        repeat_password: formRepeat_password
-      }
+       axios.post('http://localhost:3001/inscription', {
+        name: deleteBlank(formName),
+        lastname: deleteBlank(formLastname),
+        pseudonyme: deleteBlank(formPseudonyme),
+        email: deleteBlank(formEmail),
+        password: deleteBlank(formPassword),
+        repeat_password: deleteBlank(formRepeat_password)
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        const err = error.response.data.validationErrors.details[0].context;
+        if (err.label === "email") {
+          Swal.showValidationMessage("L'email n'est pas conforme.");
+        } else if (err.label === "pseudonyme" && err.limit === 3) {
+          Swal.showValidationMessage("Le Pseudonyme doit comporter au minimum 3 caractères.");
+        } else if (err.label === "lastname" && err.limit === 100) {
+          Swal.showValidationMessage("Le Nom doit comporter moins de 100 caractères.");
+        } else if (err.label === "name" && err.limit === 100) {
+          Swal.showValidationMessage("Le Prénom doit comporter moins de 100 caractères.");
+        } else if (err.label === "pseudonyme" && err.limit === 100) {
+          Swal.showValidationMessage("Le Pseudonyme doit comporter moins de 100 caractères.");
+        } else if (err.label === "repeat_password") {
+          Swal.showValidationMessage("Le mot de passe n'est pas identique.");
+        }
+      });
     },
-  }).then((result, err) => {
-    console.log(result, result.value);
+  }).then((result) => {
     if (result.isConfirmed) {
-      axios
-        .post("http://localhost:3001/inscription", {
-          name: result.value.name,
-          lastname: result.value.lastname,
-          pseudonyme: result.value.pseudonyme,
-          email: result.value.email,
-          password: result.value.password,
-          repeat_password: result.value.repeat_password,
-        })
-        .then(() =>
-          Swal.fire({
-            position: "top-end",
-            icon: "success",
-            title: "Inscription réussie, Bonne visite !",
-            confirmButtonText: "Confirmer"
-          }).then((result) => {
-            if(result.isConfirmed)
-            chalkFunc.log(chalkFunc.success("User create"));
-            window.location.href = "/";
-          })
-        )
-        .catch((err) => {
-          console.error(err);
-        });
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Inscription réussie, Bonne visite !",
+              confirmButtonText: "Confirmer",
+            }).then((result) => {
+              if (result.isConfirmed)
+                chalkFunc.log(chalkFunc.success("User create"));
+              window.location.href = "/";
+            })
+ 
     }
   });
 };
+
+
 
 export default Inscription;
