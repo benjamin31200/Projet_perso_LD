@@ -1,24 +1,12 @@
-import React from "react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
 import { chalkFunc } from "../../Function.js";
-// import { BrowserRouter } from "react-router-dom";
-// import { Link } from "react-router-dom";
 
 const MySwal = withReactContent(Swal);
 
 const Inscription = () => {
-
-  const [inscription, setInscription] = React.useState({
-    name: "",
-    lastname: "",
-    pseudonyme: "",
-    email: "",
-    password: "",
-    repeat_password: "",
-  });
-
+ 
   MySwal.fire({
     title: "Inscription",
     html: `<form action="/inscription" method="post">
@@ -30,7 +18,7 @@ const Inscription = () => {
     <input type="password" id="repeat_password" class="swal2-input" placeholder="répéter le mot de passe">
     </form>`,
     focusConfirm: false,
-    confirmButtonText: "Sign in",
+    confirmButtonText: "S'inscrire",
     showCloseButton: true,
     preConfirm: () => {
       const formName = Swal.getPopup().querySelector("#name").value;
@@ -50,36 +38,44 @@ const Inscription = () => {
       ) {
         Swal.showValidationMessage("L'un des champs d'enregistrement est vide");
       }
-      return setInscription({
+      return {
         name: formName,
         lastname: formLastname,
         pseudonyme: formPseudonyme,
         email: formEmail,
         password: formPassword,
-        repeat_password: formRepeat_password,
-      });
+        repeat_password: formRepeat_password
+      }
     },
-  }).then((result) => {
+  }).then((result, err) => {
     console.log(result, result.value);
     if (result.isConfirmed) {
       axios
-      .post("http://localhost:3001/inscription", {
-        name: inscription.name,
-        lastname: inscription.lastname,
-        pseudonyme: inscription.pseudonyme,
-        email: inscription.email,
-        password: inscription.password,
-        repeat_password: inscription.repeat_password,
-      })
-      .then(() => chalkFunc.log(chalkFunc.success("User create")))
-      .catch((err) => {
-        console.error(err);
-      });
+        .post("http://localhost:3001/inscription", {
+          name: result.value.name,
+          lastname: result.value.lastname,
+          pseudonyme: result.value.pseudonyme,
+          email: result.value.email,
+          password: result.value.password,
+          repeat_password: result.value.repeat_password,
+        })
+        .then(() =>
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: "Inscription réussie, Bonne visite !",
+            confirmButtonText: "Confirmer"
+          }).then((result) => {
+            if(result.isConfirmed)
+            chalkFunc.log(chalkFunc.success("User create"));
+            window.location.href = "/";
+          })
+        )
+        .catch((err) => {
+          console.error(err);
+        });
     }
   });
-
-  
-
 };
 
 export default Inscription;

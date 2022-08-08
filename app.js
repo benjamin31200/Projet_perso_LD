@@ -24,7 +24,9 @@ app.listen(port, () => {
 });
 
 setupRoutes(app);
-app.get("/", function (req, res) {});
+app.get("/", function (req, res) {
+  console.log(document.cookie);
+});
 
 connection.connect(function (err) {
   if (err) throw err;
