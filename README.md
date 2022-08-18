@@ -1,3 +1,9 @@
+<p align = "center">
+  <img src = "https://media.giphy.com/media/cfGmVRsJI6wq6noGxP/giphy.gif" width = 600 height="300">
+</p>
+
+
+
 # Projet débuté le 01/08/2022.
 
 Ce projet perso est basé sur une thématique culinaire et plus précisément sur les desserts.
