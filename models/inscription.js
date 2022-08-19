@@ -18,17 +18,6 @@ export const verifyPassword = (plainPassword, hashedPassword) => {
   return verify(hashedPassword, plainPassword, hashingOptions);
 };
 
-const invalidData = [
-  "select",
-  "delete",
-  "create",
-  "update",
-  "where",
-  "set",
-  "insert",
-  "into",
-];
-
 export const validate = (data) => {
   const regex =
     /\bselect\b|\bfrom\b|\bdelete\b|\bcreate\b|\bupdate\b|\bwhere\b|\bset\b|\binsert\b|\binto\b/;

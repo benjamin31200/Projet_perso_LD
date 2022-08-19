@@ -11,7 +11,7 @@ root.render(
     <Routes>
       <Route path="/" element={<App />}>
         <Route path="inscription" element={<Inscription />} />
-        {/* <Route path="invoices" element={<Invoices />}> */}
+        {/* <Route path="connexion" element={<Invoices />}> */}
         {/* <Route
         index
         element={<IndexInvoices />}
