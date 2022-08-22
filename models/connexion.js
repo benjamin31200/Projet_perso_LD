@@ -12,24 +12,13 @@ export const validate = (data) => {
   }
   return Joi.object({
     email: Joi.string().email().lowercase().max(255).required(),
-    name: Joi.string().max(100).lowercase().required(),
-    lastname: Joi.string().max(100).lowercase().required(),
-    pseudonyme: Joi.string().min(3).lowercase().max(100).required(),
     password: Joi.string().max(255).required(),
-    repeat_password: Joi.ref("password"),
   }).validate(data, { abortEarly: false }).error;
 };
 
 export const findByEmail = async (email) => {
   return connection
     .promise()
-    .query("SELECT * FROM users WHERE email = ?", [email])
-    .then(([...result]) => result[0]);
-};
-
-export const create = async (data) => {
-  return connection
-    .promise()
-    .query("INSERT INTO users SET ?", data)
+    .query("SELECT password, email FROM users WHERE email = ?", [email])
     .then(([...result]) => result[0]);
 };

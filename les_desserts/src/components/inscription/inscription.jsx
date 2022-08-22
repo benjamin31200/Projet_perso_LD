@@ -2,21 +2,69 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
 import { chalkFunc, deleteBlank } from "../../Function.js";
+import { useEffect } from "react";
 const MySwal = withReactContent(Swal);
 
 const Inscription = () => {
+  const connect = () => {
+    window.location.href = "/connexion";
+  };
+
+  useEffect(() => {
+    const connexion = document.querySelector("#connexion");
+    connexion.addEventListener("click", connect);
+  });
+
   MySwal.fire({
     title: "Inscription",
-    html: `
-    <form action="/inscription" method="post">
-    <input type="text" id="name" class="swal2-input" placeholder="Prénom"/>
-    <input type="text" id="lastname" class="swal2-input" placeholder="Nom"/>
-    <input type="text" id="pseudonyme" class="swal2-input" placeholder="Pseudonyme"/>
-    <input type="email" pattern=".+@globex.com" size="30" required id="email" class="swal2-input" placeholder="Email"/>
-    <input type="password" inputmode="numeric" id="password" class="swal2-input" placeholder="mot de passe"/>
-    <input type="password" inputmode="numeric" id="repeat_password" class="swal2-input" placeholder="répéter le mot de passe"/>
-    </form>
-    `,
+    html: (
+      <>
+        <button id="connexion">Déja Inscrit ?</button>
+        <form action="/inscription" method="post">
+          <input
+            type="text"
+            id="name"
+            class="swal2-input"
+            placeholder="Prénom"
+          />
+          <input
+            type="text"
+            id="lastname"
+            class="swal2-input"
+            placeholder="Nom"
+          />
+          <input
+            type="text"
+            id="pseudonyme"
+            class="swal2-input"
+            placeholder="Pseudonyme"
+          />
+          <input
+            type="email"
+            pattern=".+@globex.com"
+            size="30"
+            required
+            id="email"
+            class="swal2-input"
+            placeholder="Email"
+          />
+          <input
+            type="password"
+            inputmode="numeric"
+            id="password"
+            class="swal2-input"
+            placeholder="mot de passe"
+          />
+          <input
+            type="password"
+            inputmode="numeric"
+            id="repeat_password"
+            class="swal2-input"
+            placeholder="répéter le mot de passe"
+          />
+        </form>
+      </>
+    ),
     focusConfirm: false,
     confirmButtonText: "S'inscrire",
     showCloseButton: true,
