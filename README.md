@@ -38,3 +38,4 @@ L'objectif est de constituer un sit web pouvant proposer de parcourir une API cr
 - [sweetalert2](https://sweetalert2.github.io/)
 - [cookie-parser](https://www.npmjs.com/package/cookie-parser)
 - [sweetalert2-react-content](https://github.com/sweetalert2/sweetalert2-react-content)
+- [sign-in-google](https://developers.google.com/identity/gsi/web/guides/overview)
