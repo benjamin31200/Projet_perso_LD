@@ -15,6 +15,9 @@ const Navbar = () => {
         <Div>
           <Link to="/inscription">Inscription</Link>
         </Div>
+        <Div>
+          <Link to="/connexion">Connection</Link>
+        </Div>
       </Nav>
       <Outlet />
     </Section>

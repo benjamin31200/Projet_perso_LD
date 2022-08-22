@@ -1,25 +1,14 @@
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
-import { chalkFunc, deleteBlank } from "../../Function.js";
-import { useEffect } from "react";
+import { chalkFunc, deleteBlank } from "../../../Function.js";
 const MySwal = withReactContent(Swal);
 
-const Inscription = () => {
-  const connect = () => {
-    window.location.href = "/connexion";
-  };
+const SignIn = () => {
 
-  useEffect(() => {
-    const connexion = document.querySelector("#connexion");
-    connexion.addEventListener("click", connect);
-  });
-
-  MySwal.fire({
+   MySwal.fire({
     title: "Inscription",
-    html: (
-      <>
-        <button id="connexion">Déja Inscrit ?</button>
+    html: `
         <form action="/inscription" method="post">
           <input
             type="text"
@@ -63,8 +52,7 @@ const Inscription = () => {
             placeholder="répéter le mot de passe"
           />
         </form>
-      </>
-    ),
+    `,
     focusConfirm: false,
     confirmButtonText: "S'inscrire",
     showCloseButton: true,
@@ -141,4 +129,4 @@ const Inscription = () => {
   });
 };
 
-export default Inscription;
+export default SignIn;

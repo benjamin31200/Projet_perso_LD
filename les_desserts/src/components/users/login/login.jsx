@@ -1,7 +1,7 @@
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
-import { chalkFunc, deleteBlank } from "../../Function.js";
+import { chalkFunc, deleteBlank } from "../../../Function.js";
 const MySwal = withReactContent(Swal);
 
 const Connexion = () => {
