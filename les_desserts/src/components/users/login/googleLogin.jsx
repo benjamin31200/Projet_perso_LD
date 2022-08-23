@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import jwtDecode from "jwt-decode";
 
-function GoogleSignIn() {
+function GoogleLogin() {
   const [, setUser] = useState({});
 
   const handleCallbackResponse = (res) => {
@@ -16,17 +16,22 @@ function GoogleSignIn() {
     google.accounts.id.initialize({
       client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
       callback: handleCallbackResponse,
+      cancel_on_tap_outside: true,
     });
 
-    google.accounts.id.renderButton(document.getElementById("signInDiv"), {
-      theme: "outline",
+    google.accounts.id.renderButton(document.getElementById("loginDiv"), {
+      theme: "filled_blue",
       size: "large",
+      text: "signin_with",
+      shape: "pill",
+      logo_alignment: "left",
     });
+    google.accounts.id.prompt();
   }, []);
 
   return (
-  <div id="signInDiv"></div>
+  <div id="loginDiv"></div>
   );
 }
 
-export default GoogleSignIn;
+export default GoogleLogin;

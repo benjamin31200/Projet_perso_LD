@@ -1,4 +1,5 @@
 import chalk from "chalk";
+import generator from "generate-password"
 
 export const baseText = (ppTexte) => {
   const getSmallText = ppTexte.split(" ");
@@ -20,3 +21,11 @@ export const chalkFunc = {
 export const deleteBlank = (data) => {
 return data.split(" ").join("");
 }
+
+export const definePassword = generator.generate({
+	length: 25,
+	numbers: true,
+  symbols: true
+});
+
+console.log(definePassword)

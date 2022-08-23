@@ -75,7 +75,7 @@ const SignIn = () => {
         Swal.showValidationMessage("L'un des champs d'enregistrement est vide");
       }
       axios
-        .post("http://localhost:3001/inscription", {
+        .post("http://localhost:3000/inscription", {
           name: deleteBlank(formName),
           lastname: deleteBlank(formLastname),
           pseudonyme: deleteBlank(formPseudonyme),

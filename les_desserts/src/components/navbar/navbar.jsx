@@ -1,6 +1,6 @@
 import React from "react";
 import { Section, Nav, Div } from "./StyledComponentNavbar.jsx";
-import { Outlet, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
@@ -19,7 +19,6 @@ const Navbar = () => {
           <Link to="/connexion">Connection</Link>
         </Div>
       </Nav>
-      <Outlet />
     </Section>
   );
 };
