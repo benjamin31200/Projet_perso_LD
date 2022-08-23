@@ -27,5 +27,3 @@ export const definePassword = generator.generate({
 	numbers: true,
   symbols: true
 });
-
-console.log(definePassword)
