@@ -1,6 +1,7 @@
 import { connection } from "../db-config.js";
 import Joi from "joi";
 
+
 export const validate = (data) => {
   const regex =
     /\bselect\b|\bfrom\b|\bdelete\b|\bcreate\b|\bupdate\b|\bwhere\b|\bset\b|\binsert\b|\binto\b/;
@@ -10,15 +11,15 @@ export const validate = (data) => {
        throw new Error(`L'un des champs comporte une donnée interdite: ${element}`)
     }
   }
-  return Joi.object({
-    email: Joi.string().email().lowercase().max(255).required(),
-    password: Joi.string().max(255).required(),
-  }).validate(data, { abortEarly: false }).error;
-};
+    return Joi.object({
+      email: Joi.string().email().lowercase().max(255).required(),
+      password: Joi.string().max(255).required(),
+    }).validate(data, { abortEarly: false }).error;
+  };
 
-export const findByEmail = async (email) => {
+export const findUser = async (email) => {
   return connection
     .promise()
-    .query("SELECT password, email FROM users WHERE email = ?", [email])
+    .query('SELECT * FROM users WHERE email = ?', [email])
     .then(([...result]) => result[0]);
 };

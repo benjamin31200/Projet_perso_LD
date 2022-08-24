@@ -26,7 +26,7 @@ const Connexion = () => {
         Swal.showValidationMessage("L'un des champs d'enregistrement est vide");
       }
       axios
-        .post("http://localhost:3001/connexion", {
+        .post("http://localhost:3000/connexion", {
           email: deleteBlank(formEmail),
           password: deleteBlank(formPassword),
         })
@@ -34,6 +34,7 @@ const Connexion = () => {
           console.log(response);
         })
         .catch(function (error) {
+          console.log(error)
           const err = error.response.data.validationErrors.details[0].context;
           if (err.label === "email") {
             Swal.showValidationMessage("L'email n'est pas conforme.");

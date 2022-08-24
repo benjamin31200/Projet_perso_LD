@@ -4,7 +4,7 @@ import { create, findByEmail, validate } from "../models/inscription.js";
 import { hashPassword } from "../models/hashMDP.js";
 import { chalkFunc } from "../app.js";
 import { calculateToken } from "../helpers/users.js";
-import { sessionStore } from "../db-config.js"
+import { sessionStore } from "../db-config.js";
 
 inscriptionRouter.post("/google", (req, res) => {
   let { password, email, repeat_password, Client_id_google, ...data } =
@@ -30,14 +30,20 @@ inscriptionRouter.post("/google", (req, res) => {
             create(newUser).then((createdUser) => {
               chalkFunc.log(chalkFunc.success("User created with success"));
               res.status(201).json(createdUser);
-              req.session;
-              req.session.key = `Session de ${newUser.name}`;
-              req.session.secret = calculateToken(newUser.email);
-              if (!req.session.user) {
-                req.session.user = createdUser.insertId;
-              }
-              console.log(req.sessionStore.options)
-              console.log(sessionStore.generate)
+              req.session.regenerate(function (err) {
+                if (err) next(err);
+                req.session.key = `Session de ${newUser.name}`;
+                req.session.secret = calculateToken(newUser.email);
+                if (!req.session.user) {
+                  req.session.user = createdUser.insertId;
+                }
+                req.session.save(function (err) {
+                  if (err) return next(err);
+                  res.redirect("/connexion");
+                });
+              });
+
+              console.log(req.sessionStore.options);
               res.end;
             });
           });
@@ -55,8 +61,7 @@ inscriptionRouter.post("/google", (req, res) => {
 });
 
 inscriptionRouter.post("/", (req, res) => {
-  let { password, email, repeat_password, ...data } =
-    req.body;
+  let { password, email, repeat_password, ...data } = req.body;
   let validationErrors = null;
   findByEmail(email)
     .then((existingUserWithEmail) => {
@@ -67,23 +72,23 @@ inscriptionRouter.post("/", (req, res) => {
       if (validationErrors) return Promise.reject("INVALID_DATA");
       hashPassword(password).then((password) => {
         hashPassword(repeat_password).then((repeat_password) => {
-            const newPass = {
-              ...data,
-              password,
-              repeat_password,
-              email,
-            };
-            create(newPass).then((createdUser) => {
-              chalkFunc.log(chalkFunc.success("User created with success"));
-              res.status(201).json(createdUser);
-              req.session;
-              req.session.key(`Session de ${createdUser.name}`);
-              req.session.signedCookies(calculateToken(createdUser.email));
-              req.session.user(createdUser.id);
-              console.log(req.sessionID)
-              console.log(req.sessionStore)
-              res.end;
-            });
+          const newPass = {
+            ...data,
+            password,
+            repeat_password,
+            email,
+          };
+          create(newPass).then((createdUser) => {
+            chalkFunc.log(chalkFunc.success("User created with success"));
+            res.status(201).json(createdUser);
+            req.session;
+            req.session.key(`Session de ${createdUser.name}`);
+            req.session.signedCookies(calculateToken(createdUser.email));
+            req.session.user(createdUser.id);
+            console.log(req.sessionID);
+            console.log(req.sessionStore);
+            res.end;
+          });
         });
       });
     })

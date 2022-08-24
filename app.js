@@ -8,6 +8,7 @@ import dotenv from "dotenv";
 import "dotenv/config";
 dotenv.config;
 
+const IN_PROD = process.env.NODE_ENV === 'production'
 const app = express();
 app.set("trust proxy", 1);
 app.use(
@@ -20,7 +21,7 @@ app.use(
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: true, sameSite: "strict", maxAge: 60000, httpOnly : true, },
+    cookie: { secure: IN_PROD, sameSite: "strict", maxAge: 60000, httpOnly : true, },
     genid: function (req) {
       return uuidv4();
     },
