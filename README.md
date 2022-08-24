@@ -28,7 +28,7 @@ L'objectif est de constituer un sit web pouvant proposer de parcourir une API cr
 - [Chalk](https://www.npmjs.com/package/chalk)
 - [Nodemon](https://www.npmjs.com/package/nodemon)
 - [Dotenv](https://www.npmjs.com/package/dotenv)
-- [Axiox](https://axios-http.com/docs/intro)
+- [Axios](https://axios-http.com/docs/intro)
 - [Express](http://expressjs.com/)
 - [express-promise-router](https://github.com/express-promise-router/express-promise-router)
 - [Mysql2](https://www.npmjs.com/package/mysql2/)
