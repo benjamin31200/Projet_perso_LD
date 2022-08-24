@@ -1,13 +1,31 @@
 import { setupRoutes } from "./routes/index.js";
-import { connection } from "./db-config.js";
+import { connection, sessionStore } from "./db-config.js";
 import express, { json } from "express";
+import session from "express-session";
 import cookieParser from "cookie-parser";
+import { v4 as uuidv4 } from 'uuid';
 import dotenv from "dotenv";
 import "dotenv/config";
-dotenv.config
+dotenv.config;
 
 const app = express();
-app.use(json(), cookieParser());
+app.set("trust proxy", 1);
+app.use(
+  json(),
+  cookieParser(),
+  session({
+    name: process.env.SESS_NAME,
+    key: "session_cookie_name",
+    secret: "session_cookie_secret",
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: true, sameSite: "strict", maxAge: 60000, httpOnly : true, },
+    genid: function (req) {
+      return uuidv4();
+    },
+  })
+);
 import chalk from "chalk";
 
 export const chalkFunc = {
@@ -24,15 +42,16 @@ app.listen(port, () => {
 
 setupRoutes(app);
 app.get("/", function (req, res) {
-  res.json("hello")
+  res.json("hello");
+  console.log(req.session);
 });
-
-
 
 connection.connect(function (err) {
   if (err) {
-    console.error('error connecting: ' + err.stack);
+    console.error("error connecting: " + err.stack);
   } else {
-    console.log('connected to database with threadId :  ' + connection.threadId);
+    console.log(
+      "connected to database with threadId :  " + connection.threadId
+    );
   }
 });

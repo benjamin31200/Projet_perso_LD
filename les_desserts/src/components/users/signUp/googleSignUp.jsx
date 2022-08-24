@@ -5,6 +5,7 @@ import axios from "axios";
 
 function GoogleSignIn() {
   const [userGoogleData, setUserGoogleData] = useState({ undefined });
+
   const handleCallbackResponse = (res) => {
     console.log("Encoded JWT ID token: " + res.credential);
     let data = jwtDecode(res.credential);
@@ -31,8 +32,7 @@ function GoogleSignIn() {
   useEffect(() => {
     if (userGoogleData.data !== undefined) {
       const Password = definePassword;
-      console.log(Password);
-    axios.post('/inscription', {
+    axios.post('/inscription/google', {
       name: userGoogleData.data.given_name,
       lastname: userGoogleData.data.family_name,
       pseudonyme: userGoogleData.data.name,
@@ -48,6 +48,7 @@ function GoogleSignIn() {
     .catch(function (error) {
       console.log(error);
     });
+    google.accounts.id.prompt();
     }
   });
   return <div id="signInDiv"></div>;

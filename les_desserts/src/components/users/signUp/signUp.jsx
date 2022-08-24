@@ -4,7 +4,7 @@ import axios from "axios";
 import { chalkFunc, deleteBlank } from "../../../Function.js";
 const MySwal = withReactContent(Swal);
 
-const SignIn = () => {
+const SignUp = () => {
 
    MySwal.fire({
     title: "Inscription",
@@ -75,7 +75,7 @@ const SignIn = () => {
         Swal.showValidationMessage("L'un des champs d'enregistrement est vide");
       }
       axios
-        .post("http://localhost:3000/inscription", {
+        .post("/inscription", {
           name: deleteBlank(formName),
           lastname: deleteBlank(formLastname),
           pseudonyme: deleteBlank(formPseudonyme),
@@ -120,7 +120,7 @@ const SignIn = () => {
         confirmButtonText: "Confirmer",
       }).then((result) => {
         if (result.isConfirmed) chalkFunc.log(chalkFunc.success("User create"));
-        window.location.href = "/";
+        window.location.href = "/connexion";
       });
     }
     if (result.dismiss) {
@@ -129,4 +129,4 @@ const SignIn = () => {
   });
 };
 
-export default SignIn;
+export default SignUp;

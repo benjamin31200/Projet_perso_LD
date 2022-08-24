@@ -1,13 +1,13 @@
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import GoogleSignIn from "./googleSignUp.jsx";
+import GoogleSignUp from "./googleSignUp.jsx";
 import { useNavigate, useLocation } from "react-router-dom";
 import React from "react";
 import { Button, Section } from "./styledComponentsSignUp.jsx";
-import SignIn from "./signUp.jsx"
+import SignUp from "./signUp.jsx"
 const MySwal = withReactContent(Swal);
 
-const HomeSignIn = () => {
+const HomeSignUp = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -16,10 +16,10 @@ const HomeSignIn = () => {
     icon: "info",
     html: (
       <Section>
-        <GoogleSignIn />
+        <GoogleSignUp />
           <Button
             onClick={() => {
-              SignIn()
+              SignUp()
             }}
           >
             S'inscrire sur Les Desserts
@@ -35,4 +35,4 @@ const HomeSignIn = () => {
   });
 };
 
-export default HomeSignIn;
+export default HomeSignUp;
