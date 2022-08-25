@@ -7,7 +7,9 @@ export const validate = (data) => {
   for (const key in data) {
     const element = data[key];
     if (regex.exec(element.toLowerCase()) !== null) {
-       throw new Error(`L'un des champs comporte une donnée interdite: ${element}`)
+      throw new Error(
+        `L'un des champs comporte une donnée interdite: ${element}`
+      );
     }
   }
   return Joi.object({
@@ -34,4 +36,12 @@ export const create = async (data) => {
     .promise()
     .query("INSERT INTO users SET ?", data)
     .then(([...result]) => result[0]);
+};
+
+export const update = async (column) => {
+  const result = await connection
+    .promise()
+    .query("SHOW COLUMNS FROM sessions LIKE ?", [column]).then((...result) => {
+      return result[0];
+    });
 };

@@ -1,19 +1,14 @@
 import Router from "express-promise-router";
 export const inscriptionRouter = Router();
-import { create, findByEmail, validate } from "../models/inscription.js";
+import {
+  create,
+  findByEmail,
+  validate,
+  update,
+} from "../models/inscription.js";
 import { hashPassword } from "../models/hashMDP.js";
 import { chalkFunc } from "../app.js";
 import { calculateToken } from "../helpers/users.js";
-
-let p =
-  (ctx, method) =>
-  (...args) =>
-    new Promise((resolve, reject) => {
-      ctx[method](...args, (err, d) => {
-        if (err) reject(err)
-        resolve(d)
-      })
-    })
 
 inscriptionRouter.post("/google", (req, res) => {
   let { password, email, repeat_password, Client_id_google, ...data } =
@@ -47,9 +42,13 @@ inscriptionRouter.post("/google", (req, res) => {
               if (!req.session.user) {
                 req.session.user = createdUser.insertId;
               }
-              console.log(req.session)
-              console.log(req.sessionID)
-              res.status(201).json(createdUser);
+              console.log(req.session);
+              console.log(req.sessionID);
+              res.json(createdUser);
+              res.end;
+              update("user_id").then((result) => {
+                console.log(result);
+              });
             });
           });
         });
@@ -96,9 +95,9 @@ inscriptionRouter.post("/", (req, res) => {
               req.session.user = createdUser.insertId;
             }
             req.session.save(function (err) {
-              Store.set(req.sessionID, req.session, function(error) {
+              Store.set(req.sessionID, req.session, function (error) {
                 if (error) return next(error);
-              })
+              });
               if (err) return next(err);
               res.redirect("/connexion");
             });

@@ -5,5 +5,5 @@ import { homepageRouter } from "./homepageRouter.js";
 export const setupRoutes = (app) => {
   app.use('/inscription', inscriptionRouter);
   app.use('/connexion', connexionRouter);
-  app.use('/', homepageRouter);
+  app.use('/home', homepageRouter);
 };
