@@ -15,12 +15,6 @@ const options = {
 const connectSession = mysql2.createPool(options);
 export const sessionStore = new MySQLStore({}, connectSession);
 
-// test("node_redis v3", async (res) => {
-//   const store = sessionStore;
-//   await lifecycleTest(store, res);
-//   client.end(false);
-// });
-
 let p =
   (ctx, method) =>
   (...args) =>
