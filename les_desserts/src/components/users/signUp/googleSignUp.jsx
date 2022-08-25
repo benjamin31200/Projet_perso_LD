@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import jwtDecode from "jwt-decode";
 import { definePassword } from "../../../Function";
+import { chalkFunc } from "../../../Function.js";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
 
+const MySwal = withReactContent(Swal);
 function GoogleSignIn() {
   const [userGoogleData, setUserGoogleData] = useState({ undefined });
 
@@ -32,23 +36,32 @@ function GoogleSignIn() {
   useEffect(() => {
     if (userGoogleData.data !== undefined) {
       const Password = definePassword;
-    axios.post('/inscription/google', {
-      name: userGoogleData.data.given_name,
-      lastname: userGoogleData.data.family_name,
-      pseudonyme: userGoogleData.data.name,
-      email: userGoogleData.data.email,
-      password: Password,
-      repeat_password: Password,
-      picture: userGoogleData.data.picture,
-      Client_id_google: userGoogleData.data.aud,
-    })
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-    google.accounts.id.prompt();
+      axios
+        .post("/inscription/google", {
+          name: userGoogleData.data.given_name,
+          lastname: userGoogleData.data.family_name,
+          pseudonyme: userGoogleData.data.name,
+          email: userGoogleData.data.email,
+          password: Password,
+          repeat_password: Password,
+          picture: userGoogleData.data.picture,
+          Client_id_google: userGoogleData.data.aud,
+        })
+        .then(function (response) {
+          console.log(response);
+          MySwal.fire({
+            position: "center",
+            icon: "success",
+            title: "Inscription réussie, Bonne visite !",
+            confirmButtonText: "Confirmer",
+          }).then((result) => {
+            if (result.isConfirmed) chalkFunc.log(chalkFunc.success("Connexion"));
+            window.location.href = "/";
+          });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
   });
   return <div id="signInDiv"></div>;

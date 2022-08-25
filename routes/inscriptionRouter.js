@@ -4,7 +4,16 @@ import { create, findByEmail, validate } from "../models/inscription.js";
 import { hashPassword } from "../models/hashMDP.js";
 import { chalkFunc } from "../app.js";
 import { calculateToken } from "../helpers/users.js";
-import { sessionStore } from "../db-config.js";
+
+let p =
+  (ctx, method) =>
+  (...args) =>
+    new Promise((resolve, reject) => {
+      ctx[method](...args, (err, d) => {
+        if (err) reject(err)
+        resolve(d)
+      })
+    })
 
 inscriptionRouter.post("/google", (req, res) => {
   let { password, email, repeat_password, Client_id_google, ...data } =
@@ -29,22 +38,18 @@ inscriptionRouter.post("/google", (req, res) => {
             };
             create(newUser).then((createdUser) => {
               chalkFunc.log(chalkFunc.success("User created with success"));
+              req.session;
+              const hour = 3600000;
+              req.session.cookie.expires = new Date(Date.now() + hour);
+              req.session.cookie.maxAge = hour;
+              req.session.key = `Session de ${newUser.name}`;
+              req.session.secret = calculateToken(newUser.email);
+              if (!req.session.user) {
+                req.session.user = createdUser.insertId;
+              }
+              console.log(req.session)
+              console.log(req.sessionID)
               res.status(201).json(createdUser);
-              req.session.regenerate(function (err) {
-                if (err) next(err);
-                req.session.key = `Session de ${newUser.name}`;
-                req.session.secret = calculateToken(newUser.email);
-                if (!req.session.user) {
-                  req.session.user = createdUser.insertId;
-                }
-                req.session.save(function (err) {
-                  if (err) return next(err);
-                  res.redirect("/connexion");
-                });
-              });
-
-              console.log(req.sessionStore.options);
-              res.end;
             });
           });
         });
@@ -72,21 +77,31 @@ inscriptionRouter.post("/", (req, res) => {
       if (validationErrors) return Promise.reject("INVALID_DATA");
       hashPassword(password).then((password) => {
         hashPassword(repeat_password).then((repeat_password) => {
-          const newPass = {
+          const newUser = {
             ...data,
             password,
             repeat_password,
             email,
           };
-          create(newPass).then((createdUser) => {
+          create(newUser).then((createdUser) => {
             chalkFunc.log(chalkFunc.success("User created with success"));
             res.status(201).json(createdUser);
             req.session;
-            req.session.key(`Session de ${createdUser.name}`);
-            req.session.signedCookies(calculateToken(createdUser.email));
-            req.session.user(createdUser.id);
-            console.log(req.sessionID);
-            console.log(req.sessionStore);
+            const hour = 3600000;
+            req.session.cookie.expires = new Date(Date.now() + hour);
+            req.session.cookie.maxAge = hour;
+            req.session.key = `Session de ${newUser.name}`;
+            req.session.secret = calculateToken(newUser.email);
+            if (!req.session.user) {
+              req.session.user = createdUser.insertId;
+            }
+            req.session.save(function (err) {
+              Store.set(req.sessionID, req.session, function(error) {
+                if (error) return next(error);
+              })
+              if (err) return next(err);
+              res.redirect("/connexion");
+            });
             res.end;
           });
         });

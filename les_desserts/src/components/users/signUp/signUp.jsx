@@ -2,10 +2,12 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
 import { chalkFunc, deleteBlank } from "../../../Function.js";
+import { useNavigate, useLocation } from "react-router-dom";
 const MySwal = withReactContent(Swal);
 
 const SignUp = () => {
-
+  const navigate = useNavigate();
+  const location = useLocation();
    MySwal.fire({
     title: "Inscription",
     html: `
@@ -113,18 +115,18 @@ const SignUp = () => {
     },
   }).then((result) => {
     if (result.isConfirmed) {
-      Swal.fire({
+      MySwal.fire({
         position: "top-end",
         icon: "success",
         title: "Inscription réussie, Bonne visite !",
         confirmButtonText: "Confirmer",
       }).then((result) => {
         if (result.isConfirmed) chalkFunc.log(chalkFunc.success("User create"));
-        window.location.href = "/connexion";
+        navigate("/connexion" + location.search);
       });
     }
     if (result.dismiss) {
-      window.location.href = "/";
+      navigate("/" + location.search);
     }
   });
 };

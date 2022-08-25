@@ -1,5 +1,6 @@
 import { setupRoutes } from "./routes/index.js";
-import { connection, sessionStore } from "./db-config.js";
+import { connection } from "./db-config.js";
+import { sessionStore } from "./sessionStoreMysql.js";
 import express, { json } from "express";
 import session from "express-session";
 import cookieParser from "cookie-parser";
@@ -8,20 +9,18 @@ import dotenv from "dotenv";
 import "dotenv/config";
 dotenv.config;
 
-const IN_PROD = process.env.NODE_ENV === 'production'
 const app = express();
-app.set("trust proxy", 1);
 app.use(
   json(),
   cookieParser(),
   session({
     name: process.env.SESS_NAME,
-    key: "session_cookie_name",
-    secret: "session_cookie_secret",
+    key: process.env.SESS_KEY,
+    secret: process.env.SESS_SECRET,
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: IN_PROD, sameSite: "strict", maxAge: 60000, httpOnly : true, },
+    cookie: { secure: false, sameSite: "strict", maxAge: 60000, httpOnly : true, },
     genid: function (req) {
       return uuidv4();
     },
@@ -42,10 +41,6 @@ app.listen(port, () => {
 });
 
 setupRoutes(app);
-app.get("/", function (req, res) {
-  res.json("hello");
-  console.log(req.session);
-});
 
 connection.connect(function (err) {
   if (err) {
