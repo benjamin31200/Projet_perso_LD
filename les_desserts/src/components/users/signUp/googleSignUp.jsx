@@ -7,6 +7,11 @@ import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
 
 const MySwal = withReactContent(Swal);
+
+export async function signUpGoogleUser() {
+  return axios.get("/inscription");
+}
+
 function GoogleSignIn() {
   const [userGoogleData, setUserGoogleData] = useState({ undefined });
 
@@ -49,13 +54,15 @@ function GoogleSignIn() {
         })
         .then(function (response) {
           console.log(response);
+          signUpGoogleUser();
           MySwal.fire({
             position: "center",
             icon: "success",
             title: "Inscription réussie, Bonne visite !",
             confirmButtonText: "Confirmer",
           }).then((result) => {
-            if (result.isConfirmed) chalkFunc.log(chalkFunc.success("Connexion"));
+            if (result.isConfirmed)
+              chalkFunc.log(chalkFunc.success("Connexion"));
             window.location.href = "/";
           });
         })

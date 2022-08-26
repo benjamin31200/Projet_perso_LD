@@ -34,6 +34,6 @@ export async function storeMYSQL(store, res, action, sessID, sess) {
     res.json(result, sess, "get sess data from DB");
   } else if (action === "destroy") {
     let result = await p(store, action)(sessID);
-    res.json(result, 1, "destroy target sess data from DB");
+    res.json(result, 1, `destroy target ${sess} data from DB`);
   }
 }

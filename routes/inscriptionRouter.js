@@ -1,14 +1,13 @@
 import Router from "express-promise-router";
 export const inscriptionRouter = Router();
-import {
-  create,
-  findByEmail,
-  validate,
-  update,
-} from "../models/inscription.js";
+import { create, findByEmail, validate } from "../models/inscription.js";
 import { hashPassword } from "../models/hashMDP.js";
 import { chalkFunc } from "../app.js";
 import { calculateToken } from "../helpers/users.js";
+import { sessionStore, storeMYSQL } from "../sessionStoreMysql.js";
+
+let sess = {};
+let sessID = null;
 
 inscriptionRouter.post("/google", (req, res) => {
   let { password, email, repeat_password, Client_id_google, ...data } =
@@ -39,16 +38,12 @@ inscriptionRouter.post("/google", (req, res) => {
               req.session.cookie.maxAge = hour;
               req.session.key = `Session de ${newUser.name}`;
               req.session.secret = calculateToken(newUser.email);
-              if (!req.session.user) {
-                req.session.user = createdUser.insertId;
+              if (!req.session.userId) {
+                req.session.userId = createdUser.insertId;
               }
-              console.log(req.session);
-              console.log(req.sessionID);
-              res.json(createdUser);
-              res.end;
-              update("user_id").then((result) => {
-                console.log(result);
-              });
+              sess = req.session;
+              sessID = req.sessionID;
+              res.send(req.session);
             });
           });
         });
@@ -62,6 +57,12 @@ inscriptionRouter.post("/google", (req, res) => {
         res.status(422).json({ validationErrors });
       else res.status(500).send("Error saving the user");
     });
+});
+
+inscriptionRouter.get("/", async (req, res) => {
+  const store = sessionStore;
+  await storeMYSQL(store, res, "set", sessID, sess);
+  await storeMYSQL(store, res, "get", sessID, sess);
 });
 
 inscriptionRouter.post("/", (req, res) => {
@@ -91,8 +92,8 @@ inscriptionRouter.post("/", (req, res) => {
             req.session.cookie.maxAge = hour;
             req.session.key = `Session de ${newUser.name}`;
             req.session.secret = calculateToken(newUser.email);
-            if (!req.session.user) {
-              req.session.user = createdUser.insertId;
+            if (!req.session.userId) {
+              req.session.userId = createdUser.insertId;
             }
             req.session.save(function (err) {
               Store.set(req.sessionID, req.session, function (error) {

@@ -12,5 +12,5 @@ export const Section = styled.section`
   width: auto;
   background-color: white;
   display: flex;
-  flex-direction: row;
+  justify-content: center;
 `;

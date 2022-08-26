@@ -37,11 +37,3 @@ export const create = async (data) => {
     .query("INSERT INTO users SET ?", data)
     .then(([...result]) => result[0]);
 };
-
-export const update = async (column) => {
-  const result = await connection
-    .promise()
-    .query("SHOW COLUMNS FROM sessions LIKE ?", [column]).then((...result) => {
-      return result[0];
-    });
-};

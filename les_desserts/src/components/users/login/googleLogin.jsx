@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
 import jwtDecode from "jwt-decode";
+import { chalkFunc } from "../../../Function.js";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import axios from "axios";
 
+const MySwal = withReactContent(Swal);
 function GoogleLogin() {
-  const [, setUser] = useState({});
+  const [userGoogleData, setUserGoogleData] = useState({ undefined });
 
   const handleCallbackResponse = (res) => {
     console.log("Encoded JWT ID token: " + res.credential);
-    let userObject = jwtDecode(res.credential);
-    console.log(userObject);
-    setUser(userObject);
+    let data = jwtDecode(res.credential);
+    console.log(data);
+    setUserGoogleData(data);
   };
 
   useEffect(() => {
@@ -18,20 +23,34 @@ function GoogleLogin() {
       callback: handleCallbackResponse,
       cancel_on_tap_outside: true,
     });
-
-    google.accounts.id.renderButton(document.getElementById("loginDiv"), {
-      theme: "filled_blue",
-      size: "large",
-      text: "signin_with",
-      shape: "pill",
-      logo_alignment: "left",
-    });
     google.accounts.id.prompt();
-  }, []);
+  });
 
-  return (
-  <div id="loginDiv"></div>
-  );
+  useEffect(() => {
+    if (userGoogleData.data !== undefined) {
+      axios
+        .post("/connexion/google", {
+          Client_id_google: userGoogleData.data.aud,
+          email: userGoogleData.data.email
+        })
+        .then(function (response) {
+          console.log(response);
+          MySwal.fire({
+            position: "center",
+            icon: "success",
+            title: "Connection réussie, Bonne session !",
+            confirmButtonText: "Confirmer",
+          }).then((result) => {
+            if (result.isConfirmed)
+              chalkFunc.log(chalkFunc.success("Connexion"));
+            window.location.href = "/";
+          });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  });
 }
 
 export default GoogleLogin;

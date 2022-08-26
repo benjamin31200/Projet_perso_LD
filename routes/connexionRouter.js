@@ -4,12 +4,16 @@ import {
   findUser,
   validate
 } from "../models/connexion.js";
-import { hashPassword, verifyPassword } from "../models/hashMDP.js";
+import { verifyPassword } from "../models/hashMDP.js";
 import { chalkFunc } from "../app.js";
 import { calculateToken } from "../helpers/users.js";
+import { sessionStore, storeMYSQL } from "../sessionStoreMysql.js";
 
-connexionRouter.post("/", (req, res) => {
-  let { email, password } = req.body;
+let sess = null;
+let sessID = null;
+
+connexionRouter.post("/google", (req, res) => {
+  let { email, Client_id_google } = req.body;
   console.log(req.body)
   let validationErrors = null;
   findUser(email)
@@ -19,10 +23,20 @@ connexionRouter.post("/", (req, res) => {
       validationErrors = validate(req.body);
       chalkFunc.error(chalkFunc.bad(validationErrors));
       if (validationErrors) return Promise.reject("INVALID_DATA");
-      verifyPassword(password, existingUser[0].password).then((isCorrect) => {
+      verifyPassword(Client_id_google, existingUser[0].Client_id_google).then((isCorrect) => {
         if (isCorrect) {
-          req.session
-          res.status(201).send("Connection réussie")
+          req.session;
+              const hour = 3600000;
+              req.session.cookie.expires = new Date(Date.now() + hour);
+              req.session.cookie.maxAge = hour;
+              req.session.key = `Session de ${newUser.name}`;
+              req.session.secret = calculateToken(newUser.email);
+              if (!req.session.userId) {
+                req.session.userId = createdUser.insertId;
+              }
+              sess = req.session;
+              sessID = req.sessionID;
+              res.send(req.session);
         } else {
           return Promise.reject("PASSWORD NOT FOUND");
         }
@@ -41,4 +55,10 @@ connexionRouter.post("/", (req, res) => {
         res.status(409).json({ message: "L'email est incorrect." });
       else res.status(500).send("Error saving the user");
     });
+});
+
+connexionRouter.get("/", async (req, res) => {
+  const store = sessionStore;
+  await storeMYSQL(store, res, "set", sessID, sess);
+  await storeMYSQL(store, res, "get", sessID, sess);
 });
