@@ -4,10 +4,8 @@ import { create, findByEmail, validate } from "../models/inscription.js";
 import { hashPassword } from "../models/hashMDP.js";
 import { chalkFunc } from "../app.js";
 import { calculateToken } from "../helpers/users.js";
-import { sessionStore, storeMYSQL } from "../sessionStoreMysql.js";
 
-let sess = {};
-let sessID = null;
+export let sessID = null;
 
 inscriptionRouter.post("/google", (req, res) => {
   let { password, email, repeat_password, Client_id_google, ...data } =
@@ -41,7 +39,6 @@ inscriptionRouter.post("/google", (req, res) => {
               if (!req.session.userId) {
                 req.session.userId = createdUser.insertId;
               }
-              sess = req.session;
               sessID = req.sessionID;
               res.send(req.session);
             });
@@ -57,12 +54,6 @@ inscriptionRouter.post("/google", (req, res) => {
         res.status(422).json({ validationErrors });
       else res.status(500).send("Error saving the user");
     });
-});
-
-inscriptionRouter.get("/", async (req, res) => {
-  const store = sessionStore;
-  await storeMYSQL(store, res, "set", sessID, sess);
-  await storeMYSQL(store, res, "get", sessID, sess);
 });
 
 inscriptionRouter.post("/", (req, res) => {

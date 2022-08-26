@@ -7,10 +7,8 @@ import {
 import { verifyPassword } from "../models/hashMDP.js";
 import { chalkFunc } from "../app.js";
 import { calculateToken } from "../helpers/users.js";
-import { sessionStore, storeMYSQL } from "../sessionStoreMysql.js";
 
-let sess = null;
-let sessID = null;
+export let sess = null;
 
 connexionRouter.post("/google", (req, res) => {
   let { email, Client_id_google } = req.body;
@@ -34,8 +32,7 @@ connexionRouter.post("/google", (req, res) => {
               if (!req.session.userId) {
                 req.session.userId = createdUser.insertId;
               }
-              sess = req.session;
-              sessID = req.sessionID;
+              sess = req.sessionID;
               res.send(req.session);
         } else {
           return Promise.reject("PASSWORD NOT FOUND");
@@ -55,10 +52,4 @@ connexionRouter.post("/google", (req, res) => {
         res.status(409).json({ message: "L'email est incorrect." });
       else res.status(500).send("Error saving the user");
     });
-});
-
-connexionRouter.get("/", async (req, res) => {
-  const store = sessionStore;
-  await storeMYSQL(store, res, "set", sessID, sess);
-  await storeMYSQL(store, res, "get", sessID, sess);
 });

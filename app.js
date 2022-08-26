@@ -1,9 +1,11 @@
 import { setupRoutes } from "./routes/index.js";
 import { connection } from "./db-config.js";
-import { sessionStore } from "./sessionStoreMysql.js";
 import express, { json } from "express";
 import session from "express-session";
 import cookieParser from "cookie-parser";
+import { sessID } from "./routes/inscriptionRouter.js";
+import { sess } from "./routes/connexionRouter.js";
+import { sessionStore, storeMYSQL } from "./sessionStoreMysql.js";
 import { v4 as uuidv4 } from 'uuid';
 import dotenv from "dotenv";
 import "dotenv/config";
@@ -41,6 +43,7 @@ app.listen(port, () => {
 });
 
 setupRoutes(app);
+
 
 connection.connect(function (err) {
   if (err) {

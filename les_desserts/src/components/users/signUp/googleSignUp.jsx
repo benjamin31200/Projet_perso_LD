@@ -8,10 +8,6 @@ import axios from "axios";
 
 const MySwal = withReactContent(Swal);
 
-export async function signUpGoogleUser() {
-  return axios.get("/inscription");
-}
-
 function GoogleSignIn() {
   const [userGoogleData, setUserGoogleData] = useState({ undefined });
 
@@ -54,7 +50,6 @@ function GoogleSignIn() {
         })
         .then(function (response) {
           console.log(response);
-          signUpGoogleUser();
           MySwal.fire({
             position: "center",
             icon: "success",
