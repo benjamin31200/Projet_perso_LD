@@ -12,7 +12,7 @@ export const validate = (data) => {
       );
     }
   }
-  const password = data;
+  const {password} = data;
   if (password !== undefined) {
     return Joi.object({
       email: Joi.string().email().lowercase().max(255).required(),
@@ -26,15 +26,9 @@ export const validate = (data) => {
   }
 };
 
-export const findUser = async (data) => {
-  let sql = "";
-  if (data === email) {
-    sql = "SELECT * FROM users WHERE email = ?";
-  } else if (data === Client_id_google) {
-    sql = "SELECT * FROM users WHERE Client_id_google = ?";
-  }
+export const findUser = async (email) => {
   return connection
     .promise()
-    .query(sql, [data])
+    .query("SELECT * FROM users WHERE email = ?", [email])
     .then(([...result]) => result[0]);
 };

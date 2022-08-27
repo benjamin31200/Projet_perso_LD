@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import jwtDecode from "jwt-decode";
-import { definePassword } from "../../../Function";
+import { definePassword } from "../../../Function.js";
 import { chalkFunc } from "../../../Function.js";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
+import { Div } from "./styledComponentsSignUp.jsx";
 
 const MySwal = withReactContent(Swal);
 
@@ -16,8 +17,6 @@ function GoogleSignIn() {
     let data = jwtDecode(res.credential);
     setUserGoogleData({ data });
   };
-
-  console.log(userGoogleData);
   useEffect(() => {
     /* global google */
     google.accounts.id.initialize({
@@ -66,7 +65,7 @@ function GoogleSignIn() {
         });
     }
   });
-  return <div id="signInDiv"></div>;
+  return <Div id="signInDiv"></Div>;
 }
 
 export default GoogleSignIn;

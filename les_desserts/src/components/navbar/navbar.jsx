@@ -4,39 +4,37 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
-
-function getSess() {
-  return axios.get("/home");
-}
+import { chalkFunc } from "../../Function.js";
 
 const Navbar = () => {
-  const [getSession, setGetSession] = useState({});
   const [onSession, setOnSession] = useState(Boolean);
+  const [getSession, setGetSession] = useState([]);
 
   useEffect(() => {
-    const promise1 = new Promise((resolve, reject) => {
-      resolve(getSess());
-    });
-
-    promise1.then((value) => {
-      console.log(value);
-      setGetSession(value.data);
-    });
-  });
-
-  console.log(getSession);
-  const isConnect = () => {
-    if (getSession === false) {
-      setOnSession(false);
-    } else {
-      setOnSession(true);
+    function getSess() {
+      axios
+        .get("/home")
+        .then((result) => {
+          chalkFunc.log(chalkFunc.success("Requête réussie"));
+          setGetSession(result);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     }
-  };
+    if (getSession.length === 0) {
+      getSess();
+    } else if (getSession.length === undefined) {
+      console.log(getSession);
+      if (getSession.data !== false && getSession.data !== null) {
+        setOnSession(true);
+      } else {
+        setOnSession(false);
+      }
+    }
+  }, [getSession]);
 
-  useEffect(() => {
-    isConnect();
-  });
-
+  console.log(onSession);
   return (
     <Section>
       <Nav>
@@ -50,9 +48,6 @@ const Navbar = () => {
             </Div>
             <Div>
               <Link to="/logout">Déconnection</Link>
-            </Div>
-            <Div>
-              <Link to="/inscription">Inscription</Link>
             </Div>
           </>
         ) : (

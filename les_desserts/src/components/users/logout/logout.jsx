@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function closeSess() {
@@ -11,7 +11,6 @@ function closeSess() {
 const MySwal = withReactContent(Swal);
 const Logout = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   useEffect(() => {
     MySwal.fire({
       title: "Se déconnecter?",
@@ -38,9 +37,9 @@ const Logout = () => {
         .catch((err) => {
           console.log(err);
         });
-        navigate("/" + location.search);
+        navigate("/");
       } else if (result.dismiss || result.isDenied) {
-        navigate("/" + location.search);
+        navigate("/");
       }
     });
   });

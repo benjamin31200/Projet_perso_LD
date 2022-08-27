@@ -76,24 +76,7 @@ inscriptionRouter.post("/", (req, res) => {
           };
           create(newUser).then((createdUser) => {
             chalkFunc.log(chalkFunc.success("User created with success"));
-            res.status(201).json(createdUser);
-            req.session;
-            const hour = 3600000;
-            req.session.cookie.expires = new Date(Date.now() + hour);
-            req.session.cookie.maxAge = hour;
-            req.session.key = `Session de ${newUser.name}`;
-            req.session.secret = calculateToken(newUser.email);
-            if (!req.session.userId) {
-              req.session.userId = createdUser.insertId;
-            }
-            req.session.save(function (err) {
-              Store.set(req.sessionID, req.session, function (error) {
-                if (error) return next(error);
-              });
-              if (err) return next(err);
-              res.redirect("/connexion");
-            });
-            res.end;
+            res.json(createdUser);
           });
         });
       });
