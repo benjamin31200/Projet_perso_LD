@@ -38,7 +38,7 @@ function GoogleSignIn() {
       axios
         .post("/inscription/google", {
           name: userGoogleData.data.given_name,
-          lastname: userGoogleData.data.family_name,
+          lastname: userGoogleData.data.given_name,
           pseudonyme: userGoogleData.data.name,
           email: userGoogleData.data.email,
           password: Password,
@@ -63,10 +63,6 @@ function GoogleSignIn() {
           console.log(error);
           if (error.response.data.message === "This email is already used") {
             window.alert("L'adresse email est déjà utilisée");
-          } else if (
-            error.response.data.validationErrors.details[0].context.label ===
-            "lastname"
-          ) {
           }
         });
     }
