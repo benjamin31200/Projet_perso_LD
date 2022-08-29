@@ -3,9 +3,8 @@ import { connection } from "./db-config.js";
 import express, { json } from "express";
 import session from "express-session";
 import cookieParser from "cookie-parser";
-import { sessID } from "./routes/inscriptionRouter.js";
-import { sess } from "./routes/connexionRouter.js";
-import { sessionStore, storeMYSQL } from "./sessionStoreMysql.js";
+import { sessionStore} from "./sessionStoreMysql.js";
+import chalk from "chalk";
 import { v4 as uuidv4 } from 'uuid';
 import dotenv from "dotenv";
 import "dotenv/config";
@@ -28,7 +27,6 @@ app.use(
     },
   })
 );
-import chalk from "chalk";
 
 export const chalkFunc = {
   error: console.error,

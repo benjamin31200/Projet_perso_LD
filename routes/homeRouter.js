@@ -1,19 +1,13 @@
 import Router from "express-promise-router";
 export const homeRouter = Router();
 import { sessID } from "./inscriptionRouter.js";
-import { sess } from "./connexionRouter.js";
 import { sessionStore, storeMYSQL } from "../sessionStoreMysql.js";
 
-
-homeRouter.get("/", async (req, res) => {
-  console.log(sessID);
-  console.log(sess);
-  const store = sessionStore;
-  if ( sessID !== null) {
-    await storeMYSQL(store, res, "get", sessID, req.session);
-  } else if ( sess !== null) {
-    await storeMYSQL(store, res, "get", sess, req.session);
+homeRouter.get("/", async (req, res, next) => {
+  if (req.sessionID) {
+    const store = sessionStore;
+    await storeMYSQL(store, res, "get", req.sessionID, req.session);
   } else {
-    res.send("false")
+    res.end()
   }
 });

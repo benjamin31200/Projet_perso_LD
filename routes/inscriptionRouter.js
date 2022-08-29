@@ -6,7 +6,6 @@ import { chalkFunc } from "../app.js";
 import { calculateToken } from "../helpers/users.js";
 
 export let sessID = null;
-
 inscriptionRouter.post("/google", (req, res) => {
   let { password, email, repeat_password, Client_id_google, ...data } =
     req.body;
@@ -40,7 +39,7 @@ inscriptionRouter.post("/google", (req, res) => {
                 req.session.userId = createdUser.insertId;
               }
               sessID = req.sessionID;
-              res.send(req.session);
+              res.send(createdUser);
             });
           });
         });

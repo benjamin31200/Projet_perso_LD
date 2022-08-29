@@ -27,7 +27,7 @@ let p =
 export async function storeMYSQL(store, res, action, sessID, sess) {
   if (action === "set") {
     let result = await p(store, action)(sessID, sess);
-    res.json(result, "OK", "set sess data in DB");
+    return result;
   } else if (action === "get") {
     let result = await p(store, action)(sessID);
     res.json(result, sess, "get sess data from DB");

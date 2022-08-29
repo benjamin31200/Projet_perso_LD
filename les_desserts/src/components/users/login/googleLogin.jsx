@@ -12,19 +12,15 @@ function GoogleLogin() {
   const handleCallbackResponse = (res) => {
     console.log("Encoded JWT ID token: " + res.credential);
     let data = jwtDecode(res.credential);
-    console.log(data);
     setUserGoogleData({ data });
   };
 
-  useEffect(() => {
     /* global google */
     google.accounts.id.initialize({
       client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
       callback: handleCallbackResponse,
-      cancel_on_tap_outside: true,
     });
     google.accounts.id.prompt();
-  });
 
   useEffect(() => {
     if (userGoogleData.data !== undefined) {

@@ -35,6 +35,7 @@ const Navbar = () => {
   }, [getSession]);
 
   console.log(onSession);
+  console.log(getSession)
   return (
     <Section>
       <Nav>
