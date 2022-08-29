@@ -13,8 +13,10 @@ function GoogleLogin() {
     console.log("Encoded JWT ID token: " + res.credential);
     let data = jwtDecode(res.credential);
     console.log(data);
-    setUserGoogleData({data});
+    setUserGoogleData({ data });
   };
+
+  useEffect(() => {
     /* global google */
     google.accounts.id.initialize({
       client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
@@ -22,14 +24,15 @@ function GoogleLogin() {
       cancel_on_tap_outside: true,
     });
     google.accounts.id.prompt();
+  });
 
   useEffect(() => {
     if (userGoogleData.data !== undefined) {
-      console.log(userGoogleData.data.email)
+      console.log(userGoogleData.data.email);
       axios
         .post("/connexion/google", {
           Client_id_google: userGoogleData.data.aud,
-          email: userGoogleData.data.email
+          email: userGoogleData.data.email,
         })
         .then(function (response) {
           console.log(response);

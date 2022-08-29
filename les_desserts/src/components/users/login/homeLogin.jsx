@@ -46,7 +46,7 @@ const HomeSignIn = () => {
       cancelButtonText: "Retourner à l'accueil",
       focusConfirm: false,
       showCloseButton: true,
-      width: "auto",
+      width: "35rem",
       preConfirm: () => {
         const formEmail = Swal.getPopup().querySelector("#email").value;
         const formPassword = Swal.getPopup().querySelector("#password").value;
@@ -57,7 +57,7 @@ const HomeSignIn = () => {
           Swal.showValidationMessage("L'un des champs d'enregistrement est vide");
         }
         axios
-          .post("http://localhost:3000/connexion", {
+          .post("/connexion", {
             email: deleteBlank(formEmail),
             password: deleteBlank(formPassword),
           })
@@ -75,9 +75,9 @@ const HomeSignIn = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({
-          position: "top-end",
+          position: "center",
           icon: "success",
-          title: "Inscription réussie, Bonne visite !",
+          title: "Connection réussie, Bonne visite !",
           confirmButtonText: "Confirmer",
         }).then((result) => {
           if (result.isConfirmed) chalkFunc.log(chalkFunc.success("User create"));

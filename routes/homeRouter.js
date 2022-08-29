@@ -1,9 +1,8 @@
-import { sessionStore, storeMYSQL } from "../sessionStoreMysql.js";
 import Router from "express-promise-router";
 export const homeRouter = Router();
 import { sessID } from "./inscriptionRouter.js";
 import { sess } from "./connexionRouter.js";
-import { destroySession } from "./logoutRouter.js";
+import { sessionStore, storeMYSQL } from "../sessionStoreMysql.js";
 
 
 homeRouter.get("/", async (req, res) => {

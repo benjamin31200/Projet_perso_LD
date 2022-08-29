@@ -84,9 +84,9 @@ inscriptionRouter.post("/", (req, res) => {
     .catch((err) => {
       chalkFunc.error(chalkFunc.bad(err));
       if (err === "DUPLICATE_EMAIL")
-        res.status(409).json({ message: "This email is already used" });
-      else if (err === "INVALID_DATA")
-        res.status(422).json({ validationErrors });
-      else res.status(500).send("Error saving the user");
+       return res.status(409).json({ message: "This email is already used" });
+       if (err === "INVALID_DATA")
+       return res.status(422).json({ validationErrors });
+      else return res.status(500).send("Error saving the user");
     });
 });

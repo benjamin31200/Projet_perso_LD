@@ -1,7 +1,11 @@
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
-import { chalkFunc, deleteBlank } from "../../../Function.js";
+import {
+  chalkFunc,
+  deleteBlank,
+  errorMessageSignUp,
+} from "../../../Function.js";
 const MySwal = withReactContent(Swal);
 
 const SignUp = () => {
@@ -65,16 +69,6 @@ const SignUp = () => {
       const formPassword = Swal.getPopup().querySelector("#password").value;
       const formRepeat_password =
         Swal.getPopup().querySelector("#repeat_password").value;
-      if (
-        !formName ||
-        !formLastname ||
-        !formPseudonyme ||
-        !formEmail ||
-        !formPassword ||
-        !formRepeat_password
-      ) {
-        Swal.showValidationMessage("L'un des champs d'enregistrement est vide");
-      }
       return axios
         .post("/inscription", {
           name: deleteBlank(formName),
@@ -89,72 +83,36 @@ const SignUp = () => {
         })
         .catch(function (error) {
           console.log(error);
-          const labelArray = [
-            "email",
-            "name",
-            "lastname",
-            "pseudonyme",
-            "password",
-          ];
           if (error.response.status === 422) {
             const countError =
               error.response.data.validationErrors.details.length;
+            const err = [];
             for (let index = 0; index < countError; index++) {
-              if (
-                error.response.data.validationErrors.details[index].label ===
-                labelArray[index]
-              ) {
-                Swal.showValidationMessage(`${labelArray[index]} est vide.`);
-              }
+              const getErr =
+                error.response.data.validationErrors.details[index].context;
+              err.push(getErr);
+              errorMessageSignUp(err);
             }
-            if (error.label === "email") {
-              Swal.showValidationMessage("L'email n'est pas conforme.");
-            } else if (
-              error.response.data.validationErrors.details[index].context.label ===
-                "pseudonyme" &&
-              error.response.data.validationErrors.details[0].context.limit ===
-                3
-            ) {
-              Swal.showValidationMessage(
-                "Le Pseudonyme doit comporter au minimum 3 caractères."
-              );
-            } else if (error.label === "lastname" && error.limit === 100) {
-              Swal.showValidationMessage(
-                "Le Nom doit comporter moins de 100 caractères."
-              );
-            } else if (error.label === "name" && error.limit === 100) {
-              Swal.showValidationMessage(
-                "Le Prénom doit comporter moins de 100 caractères."
-              );
-            } else if (error.label === "pseudonyme" && error.limit === 100) {
-              Swal.showValidationMessage(
-                "Le Pseudonyme doit comporter moins de 100 caractères."
-              );
-            } else if (
-              error.response.data.validationErrors.details[1].context.label ===
-              "repeat_password"
-            ) {
-              Swal.showValidationMessage(
-                "Le mot de passe n'est pas identique."
-              );
-            } else if (
-              error.response.data.message === "This email is already used"
-            ) {
-              Swal.showValidationMessage("L'adresse mail est déjà utilisée.");
-            }
+          } else if (
+            error.response.data.message === "This email is already used"
+          ) {
+            Swal.showValidationMessage("L'adresse mail est déjà utilisée.");
+          }
         });
     },
   }).then((result) => {
     if (result.isConfirmed) {
       Swal.fire({
-        position: "top-end",
+        position: "center",
         icon: "success",
-        title: "Inscription réussie, Bonne visite !",
+        title: "Inscription réussie, Connectez-vous pour profiter pleinement du site !",
         confirmButtonText: "Confirmer",
       }).then((result) => {
         if (result.isConfirmed) chalkFunc.log(chalkFunc.success("User create"));
-        window.location.href("/connexion");
+        window.location.href = "/connexion";
       });
+    } else if (result.dismiss || result.isDenied) {
+      window.location.href = "/";
     }
   });
 };
