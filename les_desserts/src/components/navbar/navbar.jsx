@@ -8,34 +8,25 @@ import { chalkFunc } from "../../Function.js";
 
 const Navbar = () => {
   const [onSession, setOnSession] = useState(Boolean);
-  const [getSession, setGetSession] = useState([]);
 
   useEffect(() => {
-    function getSess() {
       axios
         .get("/home")
         .then((result) => {
           chalkFunc.log(chalkFunc.success("Requête réussie"));
-          setGetSession(result);
+          console.log(result)
+          if (result.data === null) {
+            setOnSession(false);
+          } else {
+            setOnSession(true);
+          }
         })
         .catch((err) => {
           console.error(err);
         });
-    }
-    if (getSession.length === 0) {
-      getSess();
-    } else if (getSession.length === undefined) {
-      console.log(getSession);
-      if (getSession.data !== false && getSession.data !== null) {
-        setOnSession(true);
-      } else {
-        setOnSession(false);
-      }
-    }
-  }, [getSession]);
+  });
 
   console.log(onSession);
-  console.log(getSession)
   return (
     <Section>
       <Nav>

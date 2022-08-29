@@ -51,11 +51,6 @@ connexionRouter.post("/google", (req, res) => {
     });
 });
 
-connexionRouter.get("/new", (req, res) => {
-  res.json("hello");
-  console.log("heloo");
-});
-
 connexionRouter.post("/", (req, res) => {
   let { email, password } = req.body;
   console.log(email);
@@ -80,8 +75,8 @@ connexionRouter.post("/", (req, res) => {
         if (!req.session.userId) {
           req.session.userId = existingUser[0].id;
         }
-        console.log(req.sessionID);
-        res.send(req.session);
+        storeMYSQL(store, res, "set", req.sessionID, req.session);
+        res.redirect("/home");
         if (!isCorrect) return Promise.reject("Client_id_google NOT FOUND");
       });
     })

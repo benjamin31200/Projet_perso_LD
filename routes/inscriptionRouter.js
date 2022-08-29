@@ -5,7 +5,6 @@ import { hashPassword } from "../models/hashMDP.js";
 import { chalkFunc } from "../app.js";
 import { calculateToken } from "../helpers/users.js";
 
-export let sessID = null;
 inscriptionRouter.post("/google", (req, res) => {
   let { password, email, repeat_password, Client_id_google, ...data } =
     req.body;
@@ -38,8 +37,8 @@ inscriptionRouter.post("/google", (req, res) => {
               if (!req.session.userId) {
                 req.session.userId = createdUser.insertId;
               }
-              sessID = req.sessionID;
-              res.send(createdUser);
+              storeMYSQL(store, res, "set", req.sessionID, req.session);
+              res.redirect("/home");
             });
           });
         });
@@ -83,9 +82,9 @@ inscriptionRouter.post("/", (req, res) => {
     .catch((err) => {
       chalkFunc.error(chalkFunc.bad(err));
       if (err === "DUPLICATE_EMAIL")
-       return res.status(409).json({ message: "This email is already used" });
-       if (err === "INVALID_DATA")
-       return res.status(422).json({ validationErrors });
+        return res.status(409).json({ message: "This email is already used" });
+      if (err === "INVALID_DATA")
+        return res.status(422).json({ validationErrors });
       else return res.status(500).send("Error saving the user");
     });
 });
