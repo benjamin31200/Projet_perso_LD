@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import jwtDecode from "jwt-decode";
-import { definePassword } from "../../../Function.js";
-import { chalkFunc } from "../../../Function.js";
+import { definePassword, chalkFunc } from "../../../Function.js";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
@@ -62,6 +61,13 @@ function GoogleSignIn() {
         })
         .catch(function (error) {
           console.log(error);
+          if (error.response.data.message === "This email is already used") {
+            window.alert("L'adresse email est déjà utilisée");
+          } else if (
+            error.response.data.validationErrors.details[0].context.label ===
+            "lastname"
+          ) {
+          }
         });
     }
   });

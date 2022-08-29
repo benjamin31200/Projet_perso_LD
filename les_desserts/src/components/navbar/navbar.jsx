@@ -13,8 +13,7 @@ const Navbar = () => {
       axios
         .get("/home")
         .then((result) => {
-          chalkFunc.log(chalkFunc.success("Requête réussie"));
-          console.log(result)
+          chalkFunc.log(chalkFunc.success("Session réussie"));
           if (result.data === null) {
             setOnSession(false);
           } else {
@@ -22,11 +21,10 @@ const Navbar = () => {
           }
         })
         .catch((err) => {
+          chalkFunc.error(chalkFunc.bad("Session non réussie"));
           console.error(err);
         });
   });
-
-  console.log(onSession);
   return (
     <Section>
       <Nav>
