@@ -1,8 +1,0 @@
-REACT_APP_GOOGLE_CLIENT_ID=485267687198-asvmn4iur5le4v05e51e9s1vv5sdsulm.apps.googleusercontent.com
-REACT_APP_GOOGLE_PROJECT_ID=oceanic-throne-360209
-REACT_APP_GOOGLE_AUTH_URI=https://accounts.google.com/o/oauth2/auth
-REACT_APP_GOOGLE_TOKEN_URI=https://oauth2.googleapis.com/token
-REACT_APP_GOOGLE_AUTH_PROVIDER_x509_CERT_URL=https://www.googleapis.com/oauth2/v1/certs
-REACT_APP_GOOGLE_CLIENT_SECRET=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
-REACT_APP_GOOGLE_REDIRECT_URIS=http://localhost
-REACT_APP_GOOGLE_JAVASCRIPT_ORIGINS=["http://localhost:3000", "http://localhost"]
