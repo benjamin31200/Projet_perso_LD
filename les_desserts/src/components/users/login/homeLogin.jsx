@@ -1,12 +1,11 @@
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import GoogleLogin from "./googleLogin.jsx";
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Section } from "./styledComponentsLogin.jsx";
 import { chalkFunc, deleteBlank } from "../../../Function.js";
 import axios from "axios";
-import { useEffect } from "react";
 const MySwal = withReactContent(Swal);
 
 const HomeSignIn = () => {
@@ -14,7 +13,7 @@ const HomeSignIn = () => {
 
   useEffect(() => {
     MySwal.fire({
-      title: "<strong><u>Connection</u></strong>",
+      title: "<strong><u>Connexion</u></strong>",
       icon: "info",
       html: (
         <Section>
