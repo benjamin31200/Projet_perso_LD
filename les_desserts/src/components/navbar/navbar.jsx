@@ -14,6 +14,7 @@ const Navbar = () => {
         .get("/home")
         .then((result) => {
           chalkFunc.log(chalkFunc.success("Session réussie"));
+          console.log(result.data);
           if (result.data === null) {
             setOnSession(false);
           } else {

@@ -9,3 +9,10 @@ export const findSess = async (id) => {
     )
     .then(([...result]) => result[0]);
 };
+
+export const findUserById = async (userId) => {
+  return connection
+    .promise()
+    .query("SELECT * FROM users WHERE id = ?", [userId])
+    .then(([...result]) => result[0]);
+};

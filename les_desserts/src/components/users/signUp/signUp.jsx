@@ -109,7 +109,7 @@ const SignUp = () => {
         confirmButtonText: "Confirmer",
       }).then((result) => {
         if (result.isConfirmed) chalkFunc.log(chalkFunc.success("User create"));
-        window.location.href = "/connexion";
+        window.location.href = "/";
       });
     } else if (result.dismiss || result.isDenied) {
       window.location.href = "/";

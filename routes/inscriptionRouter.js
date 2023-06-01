@@ -35,7 +35,7 @@ inscriptionRouter.post("/google", (req, res) => {
               req.session.key = `Session de ${newUser.name}`;
               req.session.secret = calculateToken(newUser.email);
               if (!req.session.userId) {
-                req.session.userId = createdUser.insertId;
+                req.session.userId = calculateToken(createdUser.insertId);
               }
               storeMYSQL(store, res, "set", req.sessionID, req.session);
               res.redirect("/home");
@@ -74,7 +74,17 @@ inscriptionRouter.post("/", (req, res) => {
           };
           create(newUser).then((createdUser) => {
             chalkFunc.log(chalkFunc.success("User created with success"));
-            res.json(createdUser);
+            console.log(newUser);
+            const hour = 3600000;
+            req.session.cookie.expires = new Date(Date.now() + hour);
+            req.session.cookie.maxAge = hour;
+            req.session.key = `Session de ${newUser.name}`;
+            req.session.secret = calculateToken(newUser.email);
+            if (!req.session.userId) {
+              req.session.userId = calculateToken(createdUser.insertId);
+            }
+            storeMYSQL(store, res, "set", req.sessionID, req.session);
+            res.redirect("/home");
           });
         });
       });

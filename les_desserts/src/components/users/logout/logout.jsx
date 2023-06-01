@@ -24,7 +24,7 @@ const Logout = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         MySwal.fire({
-          position: "top-end",
+          position: "center",
           icon: "success",
           title: "Retour à l'acceuil",
           showConfirmButton: false,
