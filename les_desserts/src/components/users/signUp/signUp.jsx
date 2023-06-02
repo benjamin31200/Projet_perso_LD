@@ -105,7 +105,7 @@ const SignUp = () => {
       Swal.fire({
         position: "center",
         icon: "success",
-        title: "Inscription réussie, Connectez-vous pour profiter pleinement du site !",
+        title: "Inscription réussie, profitez pleinement du site ou personnalisé votre profil !",
         confirmButtonText: "Confirmer",
       }).then((result) => {
         if (result.isConfirmed) chalkFunc.log(chalkFunc.success("User create"));

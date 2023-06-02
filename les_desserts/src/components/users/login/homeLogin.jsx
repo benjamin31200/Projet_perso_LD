@@ -2,15 +2,12 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import GoogleLogin from "./googleLogin.jsx";
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Section } from "./styledComponentsLogin.jsx";
 import { chalkFunc, deleteBlank } from "../../../Function.js";
 import axios from "axios";
 const MySwal = withReactContent(Swal);
 
 const HomeSignIn = () => {
-  const navigate = useNavigate();
-
   useEffect(() => {
     MySwal.fire({
       title: "<strong><u>Connexion</u></strong>",
@@ -49,11 +46,10 @@ const HomeSignIn = () => {
       preConfirm: () => {
         const formEmail = Swal.getPopup().querySelector("#email").value;
         const formPassword = Swal.getPopup().querySelector("#password").value;
-        if (
-          !formEmail ||
-          !formPassword
-        ) {
-          Swal.showValidationMessage("L'un des champs d'enregistrement est vide");
+        if (!formEmail || !formPassword) {
+          Swal.showValidationMessage(
+            "L'un des champs d'enregistrement est vide"
+          );
         }
         axios
           .post("/connexion", {
@@ -64,26 +60,34 @@ const HomeSignIn = () => {
             console.log(response);
           })
           .catch(function (error) {
-            console.log(error)
-            const err = error.response.data.validationErrors.details[0].context;
-            if (err.label === "email") {
-              Swal.showValidationMessage("L'email n'est pas conforme.");
+            console.log(error);
+            if (
+              error.response.data.message === "Le mot de passe est incorrect."
+            ) {
+              window.alert("L'email ou le mot de passe ne correspondent pas.");
+            } else if (
+              error.response.data.message ===
+              "L'email n'est associé à aucun compte."
+            ) {
+              window.alert("Aucun compte détécté avec cet email.");
             }
           });
       },
     }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
+      if (result.dismiss || result.isDenied) {
+        window.location.href = "/";
+      } else if (result.isConfirmed) {
+        MySwal.fire({
           position: "center",
           icon: "success",
-          title: "Connection réussie, Bonne visite !",
+          title: "Connexion réussie, Bonne session !",
           confirmButtonText: "Confirmer",
         }).then((result) => {
-          if (result.isConfirmed) chalkFunc.log(chalkFunc.success("User create"));
-          navigate("/");
+          if (result.isConfirmed) {
+            chalkFunc.log(chalkFunc.success("Connexion"));
+            window.location.href = "/";
+          }
         });
-      } else if (result.dismiss || result.isDenied) {
-        navigate("/");
       }
     });
   });

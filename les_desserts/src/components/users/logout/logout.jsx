@@ -17,10 +17,10 @@ const Logout = () => {
       text: "La déconnection mettra fin à votre session.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Oui, se déconnecter",
-      cancelButtonText: "Non, continuer sur le site",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Se déconnecter",
+      cancelButtonText: "Rester connecté",
     }).then((result) => {
       if (result.isConfirmed) {
         MySwal.fire({
