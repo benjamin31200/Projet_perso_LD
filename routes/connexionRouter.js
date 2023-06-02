@@ -14,28 +14,32 @@ connexionRouter.post("/google", (req, res) => {
   findUser(email)
     .then((existingUser) => {
       console.log(existingUser[0]);
-      if (existingUser[0].email === email)
-        validationErrors = validate(req.body);
-      chalkFunc.error(chalkFunc.bad(validationErrors));
-      if (validationErrors) return Promise.reject("INVALID_DATA");
-      if (existingUser[0].email !== email)
+      if (existingUser[0] === undefined)
         return Promise.reject("EMAIL NOT FOUND");
-      verifyPassword(Client_id_google, existingUser[0].Client_id_google).then(
-        (isCorrect) => {
-          req.session;
-          const hour = 3600000;
-          req.session.cookie.expires = new Date(Date.now() + hour);
-          req.session.cookie.maxAge = hour;
-          req.session.key = `Session de ${existingUser[0].name}`;
-          req.session.secret = calculateToken(existingUser[0].email);
-          if (!req.session.userId) {
-            req.session.userId = existingUser[0].id;
-          }
-          storeMYSQL(store, res, "set", req.sessionID, req.session);
-          res.redirect("/home");
-          if (!isCorrect) return Promise.reject("Client_id_google NOT FOUND");
+      else if (existingUser[0] !== undefined) {
+        if (existingUser[0].email === email) {
+          validationErrors = validate(req.body);
+          chalkFunc.error(chalkFunc.bad(validationErrors));
+          if (validationErrors) return Promise.reject("INVALID_DATA");
+          verifyPassword(
+            Client_id_google,
+            existingUser[0].Client_id_google
+          ).then((isCorrect) => {
+            req.session;
+            const hour = 3600000;
+            req.session.cookie.expires = new Date(Date.now() + hour);
+            req.session.cookie.maxAge = hour;
+            req.session.key = `Session de ${existingUser[0].name}`;
+            req.session.secret = calculateToken(existingUser[0].email);
+            if (!req.session.userId) {
+              req.session.userId = existingUser[0].id;
+            }
+            storeMYSQL(store, res, "set", req.sessionID, req.session);
+            res.redirect("/home");
+            if (!isCorrect) return Promise.reject("Client_id_google NOT FOUND");
+          });
         }
-      );
+      }
     })
     .catch((err) => {
       chalkFunc.error(chalkFunc.bad(err));
@@ -46,7 +50,7 @@ connexionRouter.post("/google", (req, res) => {
       else if (err === "INVALID_DATA")
         res.status(422).json({ validationErrors });
       else if (err === "EMAIL NOT FOUND")
-        res.status(409).json({ message: "L'email est incorrect." });
+        res.status(406).json({ message: "Le compte google n'est pas enregistré ou est incorrect." });
       else res.status(500).send("Error saving the user");
     });
 });

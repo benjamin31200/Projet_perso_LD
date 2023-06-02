@@ -4,7 +4,9 @@ import { create, findByEmail, validate } from "../models/inscription.js";
 import { hashPassword } from "../models/hashMDP.js";
 import { chalkFunc } from "../app.js";
 import { calculateToken } from "../helpers/users.js";
+import { sessionStore, storeMYSQL } from "../sessionStoreMysql.js";
 
+const store = sessionStore;
 inscriptionRouter.post("/google", (req, res) => {
   let { password, email, repeat_password, Client_id_google, ...data } =
     req.body;

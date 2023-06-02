@@ -15,12 +15,12 @@ function GoogleLogin() {
     setUserGoogleData({ data });
   };
 
-    /* global google */
-    google.accounts.id.initialize({
-      client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
-      callback: handleCallbackResponse,
-    });
-    google.accounts.id.prompt();
+  /* global google */
+  google.accounts.id.initialize({
+    client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
+    callback: handleCallbackResponse,
+  });
+  google.accounts.id.prompt();
 
   useEffect(() => {
     if (userGoogleData.data !== undefined) {
@@ -38,13 +38,23 @@ function GoogleLogin() {
             title: "Connection réussie, Bonne session !",
             confirmButtonText: "Confirmer",
           }).then((result) => {
-            if (result.isConfirmed)
+            if (result.isConfirmed) {
               chalkFunc.log(chalkFunc.success("Connexion"));
-            window.location.href = "/";
+              window.location.href = "/";
+            }
           });
         })
         .catch(function (error) {
           console.log(error);
+          if (
+            error.response.data.message ===
+            "Le compte google n'est pas enregistré ou est incorrect."
+          ) {
+            window.alert(
+              "Ce compte google n'est pas détécté, vous allez être rediriger sur la page d'inscription."
+            );
+            window.location.href = "/inscription";
+          }
         });
     }
   });
